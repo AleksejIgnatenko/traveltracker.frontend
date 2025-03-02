@@ -1,0 +1,66 @@
+.add-update-container {
+    position: relative;
+    width: 400px;
+    background-color: var(--background);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 32px;
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+.add-update-form {
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+}
+
+.add-update-top-content {
+    margin-bottom: 2rem;
+    text-align: center;
+    position: relative;
+}
+
+.add-update-top-content h2 {
+    font-size: 24px;
+    color: var(--foreground);
+    margin: 0;
+}
+
+.add-update-top-content .close-btn {
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    font-size: 18px;
+    color: #666;
+    transition: color 0.2s;
+}
+
+.add-update-top-content .close-btn:hover {
+    color: #333;
+}
+
+.add-update-inputs {
+    margin-bottom: 2rem;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+}
+
+/* Анимация появления */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+} 

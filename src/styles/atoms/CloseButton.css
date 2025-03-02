@@ -1,0 +1,22 @@
+.close-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 5px 10px;
+    color: var(--accent);
+    transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+    opacity: 0.8;
+    transform: scale(1.1);
+}
+
+.close-btn:focus {
+    outline: none;
+    color: var(--error);
+} 
