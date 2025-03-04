@@ -37,6 +37,7 @@
     color: var(--toolbar-fg);
     width: 100%;
     outline: none;
+    padding: 0px;
   }
   
   .search-bar i, .filter-search-container i {

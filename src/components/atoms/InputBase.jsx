@@ -4,8 +4,8 @@ import '../../styles/atoms/InputBase.css';
 export const InputBase = ({
     type = 'text',
     value,
-    onChange,
     onBlur,
+    onChange,
     id,
     error,
     required,
@@ -17,8 +17,8 @@ export const InputBase = ({
             type={type}
             id={id}
             value={value}
-            onChange={onChange}
             onBlur={onBlur}
+            onChange={onChange}
             placeholder={placeholder}
             required={required}
             className={`input-base ${error ? 'error' : ''}`}

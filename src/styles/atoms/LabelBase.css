@@ -15,7 +15,6 @@
     color: #ff4d4f !important;
 }
 
-/* Стили для анимации label при фокусе или заполненном input */
 input:focus ~ .label,
 input:not(:placeholder-shown) ~ .label {
     top: 0;

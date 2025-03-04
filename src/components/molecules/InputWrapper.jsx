@@ -6,18 +6,13 @@ import { LabelBase } from '../atoms/LabelBase';
 export const InputWrapper = ({ 
     type = 'text',
     value,
+    onBlur, 
     onChange,
     label,
     id,
     error,
     required,
-    onBlur 
 }) => {
-    const handleBlur = (e) => {
-        if (onBlur) {
-            onBlur(e);
-        }
-    };
 
     return (
         <div className={`input-wrapper`}>
@@ -25,8 +20,8 @@ export const InputWrapper = ({
                 type={type}
                 id={id}
                 value={value}
+                onBlur={onBlur}
                 onChange={onChange}
-                onBlur={handleBlur}
                 placeholder=" "
                 required={required}
                 error={error}

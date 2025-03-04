@@ -1,4 +1,4 @@
-.add-update-container {
+.modal-container {
     position: relative;
     width: 400px;
     background-color: var(--background);
@@ -8,47 +8,30 @@
     animation: fadeIn 0.3s ease-out forwards;
 }
 
-.add-update-form {
+.modal-form {
     width: 100%;
     max-width: 320px;
     margin: 0 auto;
 }
 
-.add-update-top-content {
+.modal-top-content {
     margin-bottom: 2rem;
     text-align: center;
     position: relative;
 }
 
-.add-update-top-content h2 {
+.modal-top-content h2 {
     font-size: 24px;
     color: var(--foreground);
     margin: 0;
 }
 
-.add-update-top-content .close-btn {
-    position: absolute;
-    top: -20px;
-    right: -20px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 8px;
-    font-size: 18px;
-    color: #666;
-    transition: color 0.2s;
-}
-
-.add-update-top-content .close-btn:hover {
-    color: #333;
-}
-
-.add-update-inputs {
+.modal-inputs {
     margin-bottom: 2rem;
 }
 
 .form-actions {
-    display: flex;
+    /* display: flex; */
     justify-content: center;
     margin-top: 24px;
 }

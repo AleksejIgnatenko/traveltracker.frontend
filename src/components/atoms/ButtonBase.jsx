@@ -9,11 +9,11 @@ export const ButtonBase = ({
     className = '' 
 }) => {
     const baseClass = 'btn';
-    const variantClass = `btn--${variant}`;
+    const variantClass = `btn-${variant}`;
     
     return (
         <button 
-            className={`${baseClass} ${variantClass} ${className} ${disabled ? 'btn--disabled' : ''}`}
+            className={`${baseClass} ${variantClass} ${className} ${disabled ? 'btn-disabled' : ''}`}
             onClick={onClick}
             disabled={disabled}
         >

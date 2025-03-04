@@ -24,3 +24,7 @@
 .bx:hover {
     opacity: 0.8;
 } 
+
+.sort-icon {
+    font-size: 16px;
+}

@@ -1,6 +1,7 @@
 import React from 'react';
 import '../../styles/organisms/Toolbar.css';
-
+import { IconBase } from "../atoms/IconBase";
+import { InputBase } from '../atoms/InputBase';
 const Toolbar = ({
     pageTitle,
     setSearchTerm,
@@ -25,21 +26,26 @@ const Toolbar = ({
                 <h2 className='pageName'>{pageTitle}</h2>
                 <div className="filter-search-container">
                     <div className="search-bar">
-                        <i className='bx bx-search'></i>
-                        <input
+                        <IconBase name="bx-search" />
+                        <InputBase 
                             type="search"
                             placeholder="Search..."
                             onChange={handleSearchChange}
                         />
+                        {/* <input
+                            type="search"
+                            placeholder="Search..."
+                            onChange={handleSearchChange}
+                        /> */}
                     </div>
                     {showAddIcon && (
-                        <i className='bx bx-plus' onClick={toggleCreateModalClick}></i>
+                        <IconBase name="bx-plus" onClick={toggleCreateModalClick}/>
                     )}
                     {showFilterIcon && (
-                        <i className='bx bx-filter' onClick={toggleFilterModalClick}></i>
+                        <IconBase name="bx-filter" onClick={toggleFilterModalClick}/>
                     )}
                     {showCalendarIcon && (
-                        <i className='bx bx-calendar' onClick={toggleCalendarClick}></i>
+                        <IconBase name="bx-calendar" onClick={toggleCalendarClick}/>
                     )}
                 </div>
             </div>

@@ -1,132 +1,207 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import AddUpdateEmployeeModal from '../components/organisms/AddUpdateEmployeeModal';
 import { ButtonBase } from '../components/atoms/ButtonBase';
 import '../styles/pages/Employees.css';
 import Toolbar from '../components/organisms/Toolbar';
+import Table from '../components/organisms/Table';
+import FilterModal from '../components/organisms/FilterModal';
+import GetAllEmployeesFetchAsync from '../api/employeeController/GetAllEmployeesFetchAsync';
+import CreateEmployeeControllerFetchAsync from '../api/employeeController/CreateEmployeeControllerFetchAsync';
+import UpdateEmployeeFetchAsync from '../api/employeeController/UpdateEmployeeFetchAsync';
+import DeleteEmployeeFetchAsync from '../api/employeeController/DeleteEmployeeFetchAsync';
 
 export default function Employees() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isAddUpdateModalOpen, setIsAddUpdateModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState('add');
+    const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
-    const [employees, setEmployees] = useState([
-        // Временные данные для примера
-        {
-            id: 1,
-            firstName: 'Иван',
-            lastName: 'Иванов',
-            middleName: 'Иванович',
-            position: 'Разработчик',
-            department: 'IT'
-        },
-        {
-            id: 2,
-            firstName: 'Петр',
-            lastName: 'Петров',
-            middleName: 'Петрович',
-            position: 'Менеджер',
-            department: 'Продажи'
-        }
-    ]);
+    const [employees, setEmployees] = useState([]);
+    const [filteredEmployees, setFilteredEmployees] = useState([]);
+    const [activeFilters, setActiveFilters] = useState({});
 
-    const filteredEmployees = useMemo(() => {
-        if (!searchTerm) return employees;
-        
-        const searchTermLower = searchTerm.toLowerCase();
-        return employees.filter(employee => 
-            employee.firstName.toLowerCase().includes(searchTermLower) ||
-            employee.lastName.toLowerCase().includes(searchTermLower) ||
-            employee.middleName.toLowerCase().includes(searchTermLower) ||
-            employee.position.toLowerCase().includes(searchTermLower) ||
-            employee.department.toLowerCase().includes(searchTermLower)
-        );
+    const filterFields = [
+        { field: 'position', label: 'Должность' },
+        { field: 'department', label: 'Отдел' }
+    ];
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // const items = [
+                //     // Временные данные для примера
+                //     {
+                //         id: 1,
+                //         firstName: 'Иван',
+                //         lastName: 'Иванов',
+                //         middleName: 'Иванович',
+                //         position: 'Разработчик',
+                //         department: 'IT'
+                //     },
+                //     {
+                //         id: 2,
+                //         firstName: 'Петр',
+                //         lastName: 'Петров',
+                //         middleName: 'Петрович',
+                //         position: 'Менеджер',
+                //         department: 'Продажи'
+                //     }
+                // ]
+
+                await fetchEmployees();
+            } catch (error) {
+                console.error('Error services:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        const filteredEmployees = searchTerm
+            ? employees.filter(employee =>
+                employee.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                employee.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                employee.middleName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                employee.position.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                employee.department.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            : employees;
+
+            const formattedItems = filteredEmployees.map(({ id, firstName, lastName, middleName, position, department }) => ({
+                id,
+                firstName,
+                lastName,
+                middleName,
+                position,
+                department,
+                linkBusinessTrips: `businessTrips/$employeeId=${id}`
+            }));
+    
+        setFilteredEmployees(formattedItems);
     }, [employees, searchTerm]);
+
+    const fetchEmployees = async () => {
+        const items = await GetAllEmployeesFetchAsync();
+
+        const formattedItems = items.map(({ id, firstName, lastName, middleName, position, department }) => ({
+            id,
+            firstName,
+            lastName,
+            middleName,
+            position,
+            department,
+            linkBusinessTrips: `businessTrips/$employeeId=${id}`
+        }));
+
+        setEmployees(formattedItems);
+        setFilteredEmployees(formattedItems);
+    };
 
     const handleOpenAddModal = () => {
         setModalMode('add');
         setSelectedEmployee(null);
-        setIsModalOpen(true);
+        setIsAddUpdateModalOpen(true);
     };
 
     const handleOpenEditModal = (employee) => {
         setModalMode('edit');
         setSelectedEmployee(employee);
-        setIsModalOpen(true);
+        setIsAddUpdateModalOpen(true);
     };
 
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
+    const handleAddUpdateCloseModal = () => {
+        setIsAddUpdateModalOpen(false);
         setSelectedEmployee(null);
     };
 
-    const handleAddEmployee = (newEmployee) => {
-        setEmployees(prev => [...prev, { ...newEmployee, id: Date.now() }]);
+    const handleAddEmployee = async (newEmployee) => {
+        await CreateEmployeeControllerFetchAsync(newEmployee);
+        await fetchEmployees();
     };
 
-    const handleUpdateEmployee = (updatedEmployee) => {
-        setEmployees(prev => 
-            prev.map(emp => emp.id === updatedEmployee.id ? updatedEmployee : emp)
-        );
+    const handleUpdateEmployee = async (updatedEmployee) => {
+        await UpdateEmployeeFetchAsync(updatedEmployee);
+        await fetchEmployees();
     };
 
-    const handleDeleteEmployee = (employeeId) => {
-        setEmployees(prev => prev.filter(emp => emp.id !== employeeId));
+    const handleDeleteEmployee = async (employeeId) => {
+        await DeleteEmployeeFetchAsync(employeeId);
+        await fetchEmployees(); 
+    };
+    
+    const handleFilterOpenCloseModal = () => {
+        setIsFilterModalOpen(!isFilterModalOpen);
+    };
+
+    const handleApplyFilter = (filteredItems, appliedFilters) => {
+        setFilteredEmployees(filteredItems);
+        setActiveFilters(appliedFilters);
     };
 
     return (
         <>
             <Toolbar
-                pageTitle={"Employees"}
+                pageTitle="Сотрудники"
                 setSearchTerm={setSearchTerm}
                 showAddIcon={true}
                 toggleCreateModalClick={handleOpenAddModal}
+                showFilterIcon={true}
+                toggleFilterModalClick={handleFilterOpenCloseModal}
             />
-            <div className="employees-page">
-                <div className="employees-header">
-                    <h1>Сотрудники</h1>
-                </div>
+            <div className="employees-page">    
 
-                {employees.length === 0 ? (
-                    <p className="no-items">Nothing could be found.</p>
-                ) : (
+                    {employees.length === 0 ? (
+                    <p className="no-items">Сотрудники не найдены.</p>
+                    ) : (
                     <>
-                        {filteredEmployees.length === 0 && searchTerm && (
-                            <p className="no-results">По вашему запросу ничего не найдено</p>
+                        {filteredEmployees.length === 0 && (
+                            <p className="no-items">Ничего не найдено.</p>
                         )}
-                        <div className="employees-list">
-                            {filteredEmployees.map(employee => (
-                                <div key={employee.id} className="employee-card">
-                                    <div className="employee-info">
-                                        <h3>{`${employee.lastName} ${employee.firstName} ${employee.middleName}`}</h3>
-                                        <p>Должность: {employee.position}</p>
-                                        <p>Отдел: {employee.department}</p>
-                                    </div>
-                                    <div className="employee-actions">
-                                        <ButtonBase 
-                                            onClick={() => handleOpenEditModal(employee)}
-                                            variant="secondary"
-                                        >
-                                            Редактировать
-                                        </ButtonBase>
-                                        <ButtonBase 
-                                            onClick={() => handleDeleteEmployee(employee.id)}
-                                            variant="danger"
-                                        >
-                                            Удалить
-                                        </ButtonBase>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                        {filteredEmployees.length > 0 && (
+                            <div className="employees-table">
+                                <Table 
+                                    items={filteredEmployees.map(emp => ({
+                                        ...emp,
+                                        actions: (
+                                            <div className="table-actions">
+                                                <ButtonBase 
+                                                    onClick={() => handleOpenEditModal(emp)}
+                                                    variant="primary"
+                                                >
+                                                    Редактировать
+                                                </ButtonBase>
+                                                <ButtonBase 
+                                                    onClick={() => handleDeleteEmployee(emp.id)}
+                                                    variant="danger"
+                                                >
+                                                    Удалить
+                                                </ButtonBase>
+                                            </div>
+                                        )
+                                    }))}
+                                />
+                            </div>
+                        )}
                     </>
                 )}
 
-                {isModalOpen && (
+                {isAddUpdateModalOpen && (
                     <AddUpdateEmployeeModal 
-                        onClose={handleCloseModal}
+                        onClose={handleAddUpdateCloseModal}
                         mode={modalMode}
                         initialData={selectedEmployee}
                         onSubmit={modalMode === 'add' ? handleAddEmployee : handleUpdateEmployee}
+                    />
+                )}
+
+                {isFilterModalOpen && (
+                    <FilterModal
+                        onClose={() => setIsFilterModalOpen(false)}
+                        items={employees}
+                        filterFields={filterFields}
+                        onApplySort={handleApplyFilter}
+                        initialFilters={activeFilters}
                     />
                 )}
             </div>

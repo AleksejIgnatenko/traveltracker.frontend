@@ -2,23 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { InputWrapper } from '../molecules/InputWrapper';
 import { ButtonBase } from '../atoms/ButtonBase';
 import { CloseButton } from '../atoms/CloseButton';
-import '../../styles/organisms/AddUpdateEmployeeModal.css';
+import '../../styles/organisms/AddUpdateCityModal.css';
 
-export default function AddUpdateEmployeeModal({ onClose, initialData, mode = 'add', onSubmit }) {
+export default function AddUpdateCityModal({ onClose, initialData, mode = 'add', onSubmit }) {
     const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        middleName: '',
-        position: '',
-        department: ''
+        country: '',
+        name: ''
     });
 
     const [errors, setErrors] = useState({
-        firstName: false,
-        lastName: false,
-        middleName: false,
-        position: false,
-        department: false
+        country: false,
+        name: false
     });
 
     useEffect(() => {
@@ -99,49 +93,25 @@ export default function AddUpdateEmployeeModal({ onClose, initialData, mode = 'a
             <div className="modal-container">
                 <div className="modal-form">
                     <div className="modal-top-content">
-                        <h2>{mode === 'edit' ? 'Редактировать сотрудника' : 'Добавить сотрудника'}</h2>
+                        <h2>{mode === 'edit' ? 'Редактировать город' : 'Добавить город'}</h2>
                         <CloseButton onClick={onClose} />
                     </div>
                     <form onSubmit={handleSubmit}>
                         <div className="modal-inputs">
                             <InputWrapper 
-                                label="Имя"
-                                id="firstName"
-                                value={formData.firstName}
-                                onBlur={handleBlur('firstName')}
-                                onChange={handleChange('firstName')}
+                                label="Страна"
+                                id="country"
+                                value={formData.country}
+                                onBlur={handleBlur('country')}
+                                onChange={handleChange('country')}
                                 required
                             />
                             <InputWrapper 
-                                label="Фамилия"
-                                id="lastName"
-                                value={formData.lastName}
-                                onBlur={handleBlur('lastName')}
-                                onChange={handleChange('lastName')}
-                                required
-                            />
-                            <InputWrapper 
-                                label="Отчество"
-                                id="middleName"
-                                value={formData.middleName}
-                                onBlur={handleBlur('middleName')}
-                                onChange={handleChange('middleName')}
-                                required
-                            />
-                            <InputWrapper 
-                                label="Должность"
-                                id="position"
-                                value={formData.position}
-                                onBlur={handleBlur('position')}
-                                onChange={handleChange('position')}
-                                required
-                            />
-                            <InputWrapper 
-                                label="Отдел"
-                                id="department"
-                                value={formData.department}
-                                onBlur={handleBlur('department')}
-                                onChange={handleChange('department')}
+                                label="Название"
+                                id="name"
+                                value={formData.name}
+                                onBlur={handleBlur('name')}
+                                onChange={handleChange('name')}
                                 required
                             />
                         </div>

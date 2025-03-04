@@ -59,21 +59,39 @@ export default function Sidebar() {
                         </ul>
                     </li>
                     <li>
-                        <Link to="/offices">
+                        <Link to="/cities">
                             <IconBase name="bx-buildings" className="nav-icon" />
-                            <span className="link_name">Офисы</span>
+                            <span className="link_name">Города</span>
                         </Link>
                         <ul className="sub-menu blank">
-                            <li><Link className="link_name" to="/offices">Офисы</Link></li>
+                            <li><Link className="link_name" to="/cities">Города</Link></li>
                         </ul>
                     </li>
                     <li>
-                        <Link to="/specialization">
-                            <IconBase name="bx-collection" className="nav-icon" />
-                            <span className="link_name">Специализации</span>
+                        <Link to="/travel-expense-types">
+                            <IconBase name="bx-wallet-alt" className="nav-icon" />
+                            <span className="link_name">Статьи расходов</span>
                         </Link>
                         <ul className="sub-menu blank">
-                            <li><Link className="link_name" to="/specialization">Специализации</Link></li>
+                            <li><Link className="link_name" to="/travel-expense-types">Статьи расходов</Link></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <Link to="/business-trips">
+                            <IconBase name="bx-briefcase" className="nav-icon" />
+                            <span className="link_name">Командировки</span>
+                        </Link>
+                        <ul className="sub-menu blank">
+                            <li><Link className="link_name" to="/business-trips">Командировки</Link></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <Link to="/advance-reports">
+                            <IconBase name="bx-notepad" className="nav-icon" />
+                            <span className="link_name">Авансовые отчеты</span>
+                        </Link>
+                        <ul className="sub-menu blank">
+                            <li><Link className="link_name" to="/advance-reports">Авансовые отчеты</Link></li>
                         </ul>
                     </li>
                     <li>
