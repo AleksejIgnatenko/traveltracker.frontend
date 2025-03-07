@@ -16,6 +16,7 @@ const Table = ({ items }) => {
                 }
             });
         });
+
         return Array.from(keys);
     };
 

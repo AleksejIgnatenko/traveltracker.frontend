@@ -5,6 +5,8 @@ import '../styles/pages/Employees.css';
 import Toolbar from '../components/organisms/Toolbar';
 import Table from '../components/organisms/Table';
 import FilterModal from '../components/organisms/FilterModal';
+import Loader from '../components/organisms/Loader';
+
 import GetAllEmployeesFetchAsync from '../api/employeeController/GetAllEmployeesFetchAsync';
 import CreateEmployeeControllerFetchAsync from '../api/employeeController/CreateEmployeeControllerFetchAsync';
 import UpdateEmployeeFetchAsync from '../api/employeeController/UpdateEmployeeFetchAsync';
@@ -19,6 +21,7 @@ export default function Employees() {
     const [employees, setEmployees] = useState([]);
     const [filteredEmployees, setFilteredEmployees] = useState([]);
     const [activeFilters, setActiveFilters] = useState({});
+    const [isLoading, setIsLoading] = useState(true);
 
     const filterFields = [
         { field: 'position', label: 'Должность' },
@@ -28,6 +31,7 @@ export default function Employees() {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                setIsLoading(true);
                 // const items = [
                 //     // Временные данные для примера
                 //     {
@@ -49,6 +53,7 @@ export default function Employees() {
                 // ]
 
                 await fetchEmployees();
+                setIsLoading(false);
             } catch (error) {
                 console.error('Error services:', error);
             }
@@ -75,7 +80,7 @@ export default function Employees() {
                 middleName,
                 position,
                 department,
-                linkBusinessTrips: `businessTrips/$employeeId=${id}`
+                linkBusinessTrips: `/trip-certificates/employee/${id}`
             }));
     
         setFilteredEmployees(formattedItems);
@@ -91,7 +96,7 @@ export default function Employees() {
             middleName,
             position,
             department,
-            linkBusinessTrips: `businessTrips/$employeeId=${id}`
+            linkBusinessTrips: `/trip-certificates/employee/${id}`
         }));
 
         setEmployees(formattedItems);
@@ -135,7 +140,17 @@ export default function Employees() {
     };
 
     const handleApplyFilter = (filteredItems, appliedFilters) => {
-        setFilteredEmployees(filteredItems);
+        const formattedItems = filteredItems.map(({ id, firstName, lastName, middleName, position, department }) => ({
+            id,
+            firstName,
+            lastName,
+            middleName,
+            position,
+            department,
+            linkBusinessTrips: `/trip-certificates/employee/${id}`
+        }));
+
+        setFilteredEmployees(formattedItems);
         setActiveFilters(appliedFilters);
     };
 
@@ -149,6 +164,8 @@ export default function Employees() {
                 showFilterIcon={true}
                 toggleFilterModalClick={handleFilterOpenCloseModal}
             />
+            {isLoading && <Loader />}
+            {!isLoading && (
             <div className="employees-page">    
 
                     {employees.length === 0 ? (
@@ -161,18 +178,18 @@ export default function Employees() {
                         {filteredEmployees.length > 0 && (
                             <div className="employees-table">
                                 <Table 
-                                    items={filteredEmployees.map(emp => ({
-                                        ...emp,
+                                    items={filteredEmployees.map(item => ({
+                                        ...item,
                                         actions: (
                                             <div className="table-actions">
                                                 <ButtonBase 
-                                                    onClick={() => handleOpenEditModal(emp)}
+                                                    onClick={() => handleOpenEditModal(item)}
                                                     variant="primary"
                                                 >
                                                     Редактировать
                                                 </ButtonBase>
                                                 <ButtonBase 
-                                                    onClick={() => handleDeleteEmployee(emp.id)}
+                                                    onClick={() => handleDeleteEmployee(item.id)}
                                                     variant="danger"
                                                 >
                                                     Удалить
@@ -205,6 +222,7 @@ export default function Employees() {
                     />
                 )}
             </div>
+            )}
         </>
     );
 } 

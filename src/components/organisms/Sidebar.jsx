@@ -43,10 +43,10 @@ export default function Sidebar() {
                     <li>
                         <Link to="/">
                             <IconBase name="bx-home" className="nav-icon" />
-                            <span className="link_name">Главная</span>
+                            <span className="link_name">Домашняя страница</span>
                         </Link>
                         <ul className="sub-menu blank">
-                            <li><Link to="/" className="link_name">Главная</Link></li>
+                            <li><Link to="/" className="link_name">Домашняя страница</Link></li>
                         </ul>
                     </li>
                     <li>
@@ -68,21 +68,21 @@ export default function Sidebar() {
                         </ul>
                     </li>
                     <li>
-                        <Link to="/travel-expense-types">
-                            <IconBase name="bx-wallet-alt" className="nav-icon" />
-                            <span className="link_name">Статьи расходов</span>
+                        <Link to="/commands">
+                            <IconBase name="bx-clipboard" className="nav-icon" />
+                            <span className="link_name">Приказы</span>
                         </Link>
                         <ul className="sub-menu blank">
-                            <li><Link className="link_name" to="/travel-expense-types">Статьи расходов</Link></li>
+                            <li><Link className="link_name" to="/commands">Приказы</Link></li>
                         </ul>
                     </li>
                     <li>
-                        <Link to="/business-trips">
-                            <IconBase name="bx-briefcase" className="nav-icon" />
-                            <span className="link_name">Командировки</span>
+                        <Link to="/trip-certificates">
+                            <IconBase name="bx-id-card" className="nav-icon" />
+                            <span className="link_name">Командировочные удостоверения</span>
                         </Link>
                         <ul className="sub-menu blank">
-                            <li><Link className="link_name" to="/business-trips">Командировки</Link></li>
+                            <li><Link className="link_name" to="/trip-certificates">Командировочные удостоверения</Link></li>
                         </ul>
                     </li>
                     <li>
@@ -92,6 +92,24 @@ export default function Sidebar() {
                         </Link>
                         <ul className="sub-menu blank">
                             <li><Link className="link_name" to="/advance-reports">Авансовые отчеты</Link></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <Link to="/trip-expenses">
+                            <IconBase name="bx-money" className="nav-icon" />
+                            <span className="link_name">Расходы по командировкам</span>
+                        </Link>
+                        <ul className="sub-menu blank">
+                            <li><Link className="link_name" to="/trip-expenses">Расходы по командировкам</Link></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <Link to="/trip-expense-types">
+                            <IconBase name="bx-wallet-alt" className="nav-icon" />
+                            <span className="link_name">Статьи расходов</span>
+                        </Link>
+                        <ul className="sub-menu blank">
+                            <li><Link className="link_name" to="/trip-expense-types">Статьи расходов</Link></li>
                         </ul>
                     </li>
                     <li>

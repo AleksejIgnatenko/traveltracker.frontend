@@ -2,15 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { InputWrapper } from '../molecules/InputWrapper';
 import { ButtonBase } from '../atoms/ButtonBase';
 import { CloseButton } from '../atoms/CloseButton';
-import '../../styles/organisms/AddUpdateCityModal.css';
+import '../../styles/organisms/AddUpdateTripExpenseTypeModal.css';
 
-export default function AddUpdateTravelExpenseTypyModal({ onClose, initialData, mode = 'add', onSubmit }) {
+export default function AddUpdateTripExpenseTypeModal({ onClose, initialData, mode = 'add', onSubmit }) {
+
     const [formData, setFormData] = useState({
         name: '',
+        standard: ''
     });
 
     const [errors, setErrors] = useState({
         name: false,
+        standard: false
     });
 
     useEffect(() => {
@@ -91,7 +94,7 @@ export default function AddUpdateTravelExpenseTypyModal({ onClose, initialData, 
             <div className="modal-container">
                 <div className="modal-form">
                     <div className="modal-top-content">
-                        <h2>{mode === 'edit' ? 'Редактировать статью расходов' : 'Добавить статью расходов'}</h2>
+                        <h2>{mode === 'edit' ? 'Редактировать командировочное удостоверение' : 'Добавить командировочное удостоверение'}</h2>
                         <CloseButton onClick={onClose} />
                     </div>
                     <form onSubmit={handleSubmit}>
@@ -102,6 +105,14 @@ export default function AddUpdateTravelExpenseTypyModal({ onClose, initialData, 
                                 value={formData.name}
                                 onBlur={handleBlur('name')}
                                 onChange={handleChange('name')}
+                                required
+                            />
+                            <InputWrapper 
+                                label="Норма"
+                                id="standard"
+                                value={formData.standard}
+                                onBlur={handleBlur('standard')}
+                                onChange={handleChange('standard')}
                                 required
                             />
                         </div>

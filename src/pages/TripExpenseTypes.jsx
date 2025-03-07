@@ -1,30 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { ButtonBase } from '../components/atoms/ButtonBase';
-import '../styles/pages/Cities.css';
+import '../styles/pages/TripExpenseTypes.css';
 import Toolbar from '../components/organisms/Toolbar';
 import Table from '../components/organisms/Table';
 import FilterModal from '../components/organisms/FilterModal';
-import AddUpdateCityModal from '../components/organisms/AddUpdateCityModal';
 import Loader from '../components/organisms/Loader';
+import AddUpdateTripExpenseTypeModal from '../components/organisms/AddUpdateTripExpenseTypeModal';
 
-import GetAllCitiesFetchAsync from '../api/cityController/GetAllCitiesFetchAsync';
-import CreateCityFetchAsync from '../api/cityController/CreateCityFetchAsync';
-import UpdateCityFetchAsync from '../api/cityController/UpdateCityFetchAsync';
-import DeleteCityFetchAsync from '../api/cityController/DeleteCityFetchAsync';
+import CreateTripExpenseTypeFetchAsync from '../api/tripExpenseTypeController/CreateTripExpenseTypeFetchAsync';
+import GetAllTripExpenseTypeFetchAsync from '../api/tripExpenseTypeController/GetAllTripExpenseTypesFetchAsync';
+import UpdateTripExpenseTypeFetchAsync from '../api/tripExpenseTypeController/UpdateTripExpenseTypeFetchAsync';
+import DeleteTripExpenseTypeFetchAsync from '../api/tripExpenseTypeController/DeleteTripExpenseTypeFetchAsync';
 
-export default function Cities() {
+export default function TripExpenseTypes() {
     const [isAddUpdateModalOpen, setIsAddUpdateModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState('add');
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
-    const [selectedCity, setSelectedCity] = useState(null);
+    const [selectedTripExpenseType, setSelectedTripExpenseType] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
-    const [cities, setCities] = useState([]);
-    const [filteredCities, setFilteredCities] = useState([]);
+    const [tripExpenseTypes, setTripExpenseTypes] = useState([]);
+    const [filteredTripExpenseTypes, setFilteredTripExpenseTypes] = useState([]);
     const [activeFilters, setActiveFilters] = useState({});
     const [isLoading, setIsLoading] = useState(true);
-
     const filterFields = [
-        { field: 'country', label: 'Страна' },
+        { field: 'standard', label: 'Норма' },
     ];
 
     useEffect(() => {
@@ -35,17 +34,18 @@ export default function Cities() {
                 //     // Временные данные для примера
                 //     {
                 //         id: 1,
-                //         country: 'Россия',
-                //         name: 'Москва',
+                //         name: "Проживание",
+                //         standard: 1000,
                 //     },
                 //     {
                 //         id: 2,
-                //         country: 'Белорусь',
-                //         name: 'Минск',
-                //     }
+                //         name: "Еда",
+                //         standard: 500,
+                //     },
+                
                 // ]
 
-                await fetchCities();
+                await fetchTripExpenseTypes();
                 setIsLoading(false);
             } catch (error) {
                 console.error('Error services:', error);
@@ -56,67 +56,67 @@ export default function Cities() {
     }, []);
 
     useEffect(() => {
-        const filteredCities = searchTerm
-            ? cities.filter(city =>
-                city.country.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                city.name.toLowerCase().includes(searchTerm.toLowerCase())
+        const filteredTripExpenseTypes = searchTerm
+            ? tripExpenseTypes.filter(tripExpenseType =>
+                tripExpenseType.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                tripExpenseType.standard.toString().toLowerCase().includes(searchTerm.toLowerCase())
             )
-            : cities;
+            : tripExpenseTypes;
 
-            const formattedItems = filteredCities.map(({ id, country, name }) => ({
+            const formattedItems = filteredTripExpenseTypes.map(({ id, name, standard }) => ({
                 id,
-                country,
                 name,
-                linkBusinessTrips: `/trip-certificates/city/${id}`
+                standard,
+                linkTripExpense: `/trip-expenses/trip-expense-type/${id}`
             }));
     
-        setFilteredCities(formattedItems);
-    }, [cities, searchTerm]);
+        setFilteredTripExpenseTypes(formattedItems);
+    }, [tripExpenseTypes, searchTerm]);
 
-    const fetchCities = async () => {
-        const items = await GetAllCitiesFetchAsync();
+    const fetchTripExpenseTypes = async () => {
+        const items = await GetAllTripExpenseTypeFetchAsync();
     
-        const formattedItems = items.map(({ id, country, name }) => ({
+        const formattedItems = items.map(({ id, name, standard }) => ({
             id,
-            country,
             name,
-            linkBusinessTrips: `/trip-certificates/city/${id}`
+            standard,
+            linkTripExpense: `/trip-expenses/trip-expense-type/${id}`
         }));
     
-        setCities(formattedItems);
-        setFilteredCities(formattedItems);
+        setTripExpenseTypes(items);
+        setFilteredTripExpenseTypes(formattedItems);
     };
 
     const handleOpenAddModal = () => {
         setModalMode('add');
-        setSelectedCity(null);
+        setSelectedTripExpenseType(null);
         setIsAddUpdateModalOpen(true);
     };
 
-    const handleOpenEditModal = (city) => {
+    const handleOpenEditModal = (tripExpenseType) => {
         setModalMode('edit');
-        setSelectedCity(city);
+        setSelectedTripExpenseType(tripExpenseTypes.find(item => item.id === tripExpenseType.id));
         setIsAddUpdateModalOpen(true);
     };
 
     const handleAddUpdateCloseModal = () => {
         setIsAddUpdateModalOpen(false);
-        setSelectedCity(null);
+        setSelectedTripExpenseType(null);
     };
 
-    const handleAddCity = async (newCity) => {
-        await CreateCityFetchAsync(newCity);
-        await fetchCities();
+    const handleAddTripExpenseType = async (newTripExpenseType) => {
+        await CreateTripExpenseTypeFetchAsync(newTripExpenseType);
+        await fetchTripExpenseTypes();
     };
 
-    const handleUpdateCity = async (updatedCity) => {
-        await UpdateCityFetchAsync(updatedCity);
-        await fetchCities();
+    const handleUpdateTripExpenseType = async (updatedTripExpenseType) => {
+        await UpdateTripExpenseTypeFetchAsync(updatedTripExpenseType);
+        await fetchTripExpenseTypes();
     };
 
-    const handleDeleteCity = async (cityId) => {
-        await DeleteCityFetchAsync(cityId);
-        await fetchCities();
+    const handleDeleteTripExpenseType = async (tripExpenseTypeId) => {
+        await DeleteTripExpenseTypeFetchAsync(tripExpenseTypeId);
+        await fetchTripExpenseTypes();
     };
     
     const handleFilterOpenCloseModal = () => {
@@ -124,21 +124,20 @@ export default function Cities() {
     };
 
     const handleApplyFilter = (filteredItems, appliedFilters) => {
-        const formattedItems = filteredItems.map(({ id, country, name }) => ({
+        const formattedItems = filteredItems.map(({ id, name, standard }) => ({
             id,
-            country,
             name,
-            linkBusinessTrips: `/trip-certificates/city/${id}`
+            standard,
+            linkTripExpense: `/trip-expenses/trip-expense-type/${id}`
         }));
-        
-        setFilteredCities(formattedItems);
+        setFilteredTripExpenseTypes(formattedItems);
         setActiveFilters(appliedFilters);
     };
 
     return (
         <>
             <Toolbar
-                pageTitle="Города"
+                pageTitle="Статьи расходов"
                 setSearchTerm={setSearchTerm}
                 showAddIcon={true}
                 toggleCreateModalClick={handleOpenAddModal}
@@ -147,20 +146,19 @@ export default function Cities() {
             />
             {isLoading && <Loader />}
             {!isLoading && (
-
             <div className="cities-page">    
 
-            {cities.length === 0 ? (
-            <p className="no-items">Города не найдены.</p>
+            {tripExpenseTypes.length === 0 ? (
+            <p className="no-items">Статьи расходов не найдены.</p>
             ) : (
             <>
-                {filteredCities.length === 0 && (
+                {filteredTripExpenseTypes.length === 0 && (
                     <p className="no-items">Ничего не найдено.</p>
                 )}
-                {filteredCities.length > 0 && (
-                    <div className="cities-table">
+                {filteredTripExpenseTypes.length > 0 && (
+                    <div className="trip-expense-types-table">
                         <Table 
-                            items={filteredCities.map(item => ({
+                            items={filteredTripExpenseTypes.map(item => ({
                                 ...item,
                                 actions: (
                                     <div className="table-actions">
@@ -171,7 +169,7 @@ export default function Cities() {
                                             Редактировать
                                         </ButtonBase>
                                         <ButtonBase 
-                                            onClick={() => handleDeleteCity(item.id)}
+                                            onClick={() => handleDeleteTripExpenseType(item.id)}
                                             variant="danger"
                                         >
                                             Удалить
@@ -186,18 +184,18 @@ export default function Cities() {
         )}
 
                 {isAddUpdateModalOpen && (
-                    <AddUpdateCityModal 
+                    <AddUpdateTripExpenseTypeModal 
                         onClose={handleAddUpdateCloseModal}
                         mode={modalMode}
-                        initialData={selectedCity}
-                        onSubmit={modalMode === 'add' ? handleAddCity : handleUpdateCity}
+                        initialData={selectedTripExpenseType}
+                        onSubmit={modalMode === 'add' ? handleAddTripExpenseType : handleUpdateTripExpenseType}
                     />
                 )}
 
                 {isFilterModalOpen && (
                     <FilterModal
                         onClose={() => setIsFilterModalOpen(false)}
-                        items={cities}
+                        items={tripExpenseTypes}
                         filterFields={filterFields}
                         onApplySort={handleApplyFilter}
                         initialFilters={activeFilters}
