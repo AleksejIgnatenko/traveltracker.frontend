@@ -11,7 +11,7 @@ import CreateTripExpenseTypeFetchAsync from '../api/tripExpenseTypeController/Cr
 import GetAllTripExpenseTypeFetchAsync from '../api/tripExpenseTypeController/GetAllTripExpenseTypesFetchAsync';
 import UpdateTripExpenseTypeFetchAsync from '../api/tripExpenseTypeController/UpdateTripExpenseTypeFetchAsync';
 import DeleteTripExpenseTypeFetchAsync from '../api/tripExpenseTypeController/DeleteTripExpenseTypeFetchAsync';
-
+import ExportTripExpenseTypesToExcelFetchAsync from '../api/tripExpenseTypeController/ExportTripExpenseTypesToExcelFetchAsync';
 export default function TripExpenseTypes() {
     const [isAddUpdateModalOpen, setIsAddUpdateModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState('add');
@@ -134,6 +134,10 @@ export default function TripExpenseTypes() {
         setActiveFilters(appliedFilters);
     };
 
+    const handleExportExcel = async () => {
+        await ExportTripExpenseTypesToExcelFetchAsync();
+    };
+
     return (
         <>
             <Toolbar
@@ -143,6 +147,8 @@ export default function TripExpenseTypes() {
                 toggleCreateModalClick={handleOpenAddModal}
                 showFilterIcon={true}
                 toggleFilterModalClick={handleFilterOpenCloseModal}
+                showExcelIcon={true}
+                toggleExcelClick={handleExportExcel}
             />
             {isLoading && <Loader />}
             {!isLoading && (

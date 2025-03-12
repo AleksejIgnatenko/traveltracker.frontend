@@ -13,6 +13,7 @@ import GetAllAdvanceReportFetchAsync from '../api/advanceReportController/GetAll
 import GetAdvanceReportByTripCertificateIdFetchAsync from '../api/advanceReportController/GetAdvanceReportByTripCertificateIdFetchAsync';
 import UpdateAdvanceReportFetchAsync from '../api/advanceReportController/UpdateAdvanceReportFetchAsync';
 import DeleteAdvanceReportFetchAsync from '../api/advanceReportController/DeleteAdvanceReportFetchAsync';
+import ExportAdvanceReportsToExcelAsync from '../api/advanceReportController/ExportAdvanceReportsToExcelFetchAsync';
 
 export default function AdvanceReports() {
     const { type, id } = useParams();
@@ -47,7 +48,7 @@ export default function AdvanceReports() {
                 //         totalAmount: 2000,
                 //         dateOfDelivery: '2024-01-02',
                 //     },
-                
+
                 // ]
 
                 if (id) {
@@ -80,7 +81,7 @@ export default function AdvanceReports() {
             dateOfDelivery,
             linkTripExpense: `/trip-expenses/advance-report/${id}`
         }));
-    
+
         setFilteredAdvanceReports(formattedItems);
     }, [advanceReports, searchTerm]);
 
@@ -91,14 +92,14 @@ export default function AdvanceReports() {
         } else {
             items = await GetAllAdvanceReportFetchAsync();
         }
-        
+
         const formattedItems = items.map(({ id, totalAmount, dateOfDelivery }) => ({
             id,
             totalAmount: totalAmount.toString(),
             dateOfDelivery,
             linkTripExpense: `/trip-expenses/advance-report/${id}`
         }));
-        
+
         setAdvanceReports(items);
         setFilteredAdvanceReports(formattedItems);
     };
@@ -134,7 +135,7 @@ export default function AdvanceReports() {
         await DeleteAdvanceReportFetchAsync(advanceReportId);
         await fetchAdvanceReports();
     };
-    
+
     const handleFilterOpenCloseModal = () => {
         setIsFilterModalOpen(!isFilterModalOpen);
     };
@@ -142,6 +143,10 @@ export default function AdvanceReports() {
     const handleApplyFilter = (filteredItems, appliedFilters) => {
         setFilteredAdvanceReports(filteredItems);
         setActiveFilters(appliedFilters);
+    };
+
+    const handleExportExcel = async () => {
+        await ExportAdvanceReportsToExcelAsync();
     };
 
     return (
@@ -153,65 +158,67 @@ export default function AdvanceReports() {
                 toggleCreateModalClick={handleOpenAddModal}
                 showFilterIcon={true}
                 toggleFilterModalClick={handleFilterOpenCloseModal}
+                showExcelIcon={true}
+                toggleExcelClick={handleExportExcel}
             />
             {isLoading && <Loader />}
             {!isLoading && (
-            <div className="cities-page">    
+                <div className="cities-page">
 
-            {advanceReports.length === 0 ? (
-            <p className="no-items">Авансовые отчеты не найдены.</p>
-            ) : (
-            <>
-                {filteredAdvanceReports.length === 0 && (
-                    <p className="no-items">Ничего не найдено.</p>
-                )}
-                {filteredAdvanceReports.length > 0 && (
-                    <div className="advance-reports-table">
-                        <Table 
-                            items={filteredAdvanceReports.map(item => ({
-                                ...item,
-                                actions: (
-                                    <div className="table-actions">
-                                        <ButtonBase 
-                                            onClick={() => handleOpenEditModal(item)}
-                                            variant="primary"
-                                        >
-                                            Редактировать
-                                        </ButtonBase>
-                                        <ButtonBase 
-                                            onClick={() => handleDeleteAdvanceReport(item.id)}
-                                            variant="danger"
-                                        >
-                                            Удалить
-                                        </ButtonBase>
-                                    </div>
-                                )
-                            }))}
+                    {advanceReports.length === 0 ? (
+                        <p className="no-items">Авансовые отчеты не найдены.</p>
+                    ) : (
+                        <>
+                            {filteredAdvanceReports.length === 0 && (
+                                <p className="no-items">Ничего не найдено.</p>
+                            )}
+                            {filteredAdvanceReports.length > 0 && (
+                                <div className="advance-reports-table">
+                                    <Table
+                                        items={filteredAdvanceReports.map(item => ({
+                                            ...item,
+                                            actions: (
+                                                <div className="table-actions">
+                                                    <ButtonBase
+                                                        onClick={() => handleOpenEditModal(item)}
+                                                        variant="primary"
+                                                    >
+                                                        Редактировать
+                                                    </ButtonBase>
+                                                    <ButtonBase
+                                                        onClick={() => handleDeleteAdvanceReport(item.id)}
+                                                        variant="danger"
+                                                    >
+                                                        Удалить
+                                                    </ButtonBase>
+                                                </div>
+                                            )
+                                        }))}
+                                    />
+                                </div>
+                            )}
+                        </>
+                    )}
+
+                    {isAddUpdateModalOpen && (
+                        <AddUpdateAdvanceReportModal
+                            onClose={handleAddUpdateCloseModal}
+                            mode={modalMode}
+                            initialData={selectedAdvanceReport}
+                            onSubmit={modalMode === 'add' ? handleAddAdvanceReport : handleUpdateAdvanceReport}
                         />
-                    </div>
-                )}
-            </>
-        )}
+                    )}
 
-                {isAddUpdateModalOpen && (
-                    <AddUpdateAdvanceReportModal 
-                        onClose={handleAddUpdateCloseModal}
-                        mode={modalMode}
-                        initialData={selectedAdvanceReport}
-                        onSubmit={modalMode === 'add' ? handleAddAdvanceReport : handleUpdateAdvanceReport}
-                    />
-                )}
-
-                {isFilterModalOpen && (
-                    <FilterModal
-                        onClose={() => setIsFilterModalOpen(false)}
-                        items={advanceReports}
-                        filterFields={filterFields}
-                        onApplySort={handleApplyFilter}
-                        initialFilters={activeFilters}
-                    />
-                )}
-            </div>
+                    {isFilterModalOpen && (
+                        <FilterModal
+                            onClose={() => setIsFilterModalOpen(false)}
+                            items={advanceReports}
+                            filterFields={filterFields}
+                            onApplySort={handleApplyFilter}
+                            initialFilters={activeFilters}
+                        />
+                    )}
+                </div>
             )}
         </>
     );

@@ -11,6 +11,7 @@ import GetAllCitiesFetchAsync from '../api/cityController/GetAllCitiesFetchAsync
 import CreateCityFetchAsync from '../api/cityController/CreateCityFetchAsync';
 import UpdateCityFetchAsync from '../api/cityController/UpdateCityFetchAsync';
 import DeleteCityFetchAsync from '../api/cityController/DeleteCityFetchAsync';
+import ExportCitiesToExcelFetchAsync from '../api/cityController/ExportCitiesToExcelFetchAsync';
 
 export default function Cities() {
     const [isAddUpdateModalOpen, setIsAddUpdateModalOpen] = useState(false);
@@ -63,26 +64,26 @@ export default function Cities() {
             )
             : cities;
 
-            const formattedItems = filteredCities.map(({ id, country, name }) => ({
-                id,
-                country,
-                name,
-                linkBusinessTrips: `/trip-certificates/city/${id}`
-            }));
-    
+        const formattedItems = filteredCities.map(({ id, country, name }) => ({
+            id,
+            country,
+            name,
+            linkBusinessTrips: `/trip-certificates/city/${id}`
+        }));
+
         setFilteredCities(formattedItems);
     }, [cities, searchTerm]);
 
     const fetchCities = async () => {
         const items = await GetAllCitiesFetchAsync();
-    
+
         const formattedItems = items.map(({ id, country, name }) => ({
             id,
             country,
             name,
             linkBusinessTrips: `/trip-certificates/city/${id}`
         }));
-    
+
         setCities(formattedItems);
         setFilteredCities(formattedItems);
     };
@@ -118,7 +119,7 @@ export default function Cities() {
         await DeleteCityFetchAsync(cityId);
         await fetchCities();
     };
-    
+
     const handleFilterOpenCloseModal = () => {
         setIsFilterModalOpen(!isFilterModalOpen);
     };
@@ -130,9 +131,13 @@ export default function Cities() {
             name,
             linkBusinessTrips: `/trip-certificates/city/${id}`
         }));
-        
+
         setFilteredCities(formattedItems);
         setActiveFilters(appliedFilters);
+    };
+
+    const handleExportExcel = async () => {
+        await ExportCitiesToExcelFetchAsync();
     };
 
     return (
@@ -144,66 +149,68 @@ export default function Cities() {
                 toggleCreateModalClick={handleOpenAddModal}
                 showFilterIcon={true}
                 toggleFilterModalClick={handleFilterOpenCloseModal}
+                showExcelIcon={true}
+                toggleExcelClick={handleExportExcel}
             />
             {isLoading && <Loader />}
             {!isLoading && (
 
-            <div className="cities-page">    
+                <div className="cities-page">
 
-            {cities.length === 0 ? (
-            <p className="no-items">Города не найдены.</p>
-            ) : (
-            <>
-                {filteredCities.length === 0 && (
-                    <p className="no-items">Ничего не найдено.</p>
-                )}
-                {filteredCities.length > 0 && (
-                    <div className="cities-table">
-                        <Table 
-                            items={filteredCities.map(item => ({
-                                ...item,
-                                actions: (
-                                    <div className="table-actions">
-                                        <ButtonBase 
-                                            onClick={() => handleOpenEditModal(item)}
-                                            variant="primary"
-                                        >
-                                            Редактировать
-                                        </ButtonBase>
-                                        <ButtonBase 
-                                            onClick={() => handleDeleteCity(item.id)}
-                                            variant="danger"
-                                        >
-                                            Удалить
-                                        </ButtonBase>
-                                    </div>
-                                )
-                            }))}
+                    {cities.length === 0 ? (
+                        <p className="no-items">Города не найдены.</p>
+                    ) : (
+                        <>
+                            {filteredCities.length === 0 && (
+                                <p className="no-items">Ничего не найдено.</p>
+                            )}
+                            {filteredCities.length > 0 && (
+                                <div className="cities-table">
+                                    <Table
+                                        items={filteredCities.map(item => ({
+                                            ...item,
+                                            actions: (
+                                                <div className="table-actions">
+                                                    <ButtonBase
+                                                        onClick={() => handleOpenEditModal(item)}
+                                                        variant="primary"
+                                                    >
+                                                        Редактировать
+                                                    </ButtonBase>
+                                                    <ButtonBase
+                                                        onClick={() => handleDeleteCity(item.id)}
+                                                        variant="danger"
+                                                    >
+                                                        Удалить
+                                                    </ButtonBase>
+                                                </div>
+                                            )
+                                        }))}
+                                    />
+                                </div>
+                            )}
+                        </>
+                    )}
+
+                    {isAddUpdateModalOpen && (
+                        <AddUpdateCityModal
+                            onClose={handleAddUpdateCloseModal}
+                            mode={modalMode}
+                            initialData={selectedCity}
+                            onSubmit={modalMode === 'add' ? handleAddCity : handleUpdateCity}
                         />
-                    </div>
-                )}
-            </>
-        )}
+                    )}
 
-                {isAddUpdateModalOpen && (
-                    <AddUpdateCityModal 
-                        onClose={handleAddUpdateCloseModal}
-                        mode={modalMode}
-                        initialData={selectedCity}
-                        onSubmit={modalMode === 'add' ? handleAddCity : handleUpdateCity}
-                    />
-                )}
-
-                {isFilterModalOpen && (
-                    <FilterModal
-                        onClose={() => setIsFilterModalOpen(false)}
-                        items={cities}
-                        filterFields={filterFields}
-                        onApplySort={handleApplyFilter}
-                        initialFilters={activeFilters}
-                    />
-                )}
-            </div>
+                    {isFilterModalOpen && (
+                        <FilterModal
+                            onClose={() => setIsFilterModalOpen(false)}
+                            items={cities}
+                            filterFields={filterFields}
+                            onApplySort={handleApplyFilter}
+                            initialFilters={activeFilters}
+                        />
+                    )}
+                </div>
             )}
         </>
     );

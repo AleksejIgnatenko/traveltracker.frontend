@@ -11,6 +11,8 @@ import GetAllCommandsFetchAsync from '../api/commandController/GetAllCommandsFet
 import CreateCommandFetchAsync from '../api/commandController/CreateCommandFetchAsync';
 import UpdateCommandFetchAsync from '../api/commandController/UpdateCommandFetchAsync';
 import DeleteCommandFetchAsync from '../api/commandController/DeleteCommandFetchAsync';
+import ExportCommandsToExcelFetchAsync from '../api/commandController/ExportCommandsToExcelFetchAsync';
+import ExportDateQuantityChartToExcelFetchAsync from '../api/commandController/ExportDateQuantityChartToExcelFetchAsync';
 
 export default function Commands() {
     const [isAddUpdateModalOpen, setIsAddUpdateModalOpen] = useState(false);
@@ -141,6 +143,14 @@ export default function Commands() {
         setActiveFilters(appliedFilters);
     };
 
+    const handleExportExcel = async () => {
+        await ExportCommandsToExcelFetchAsync();
+    };
+
+    const handleExportGraphic = async () => {
+        await ExportDateQuantityChartToExcelFetchAsync();
+    };
+
     return (
         <>
             <Toolbar
@@ -150,6 +160,10 @@ export default function Commands() {
                 toggleCreateModalClick={handleOpenAddModal}
                 showFilterIcon={true}
                 toggleFilterModalClick={handleFilterOpenCloseModal}
+                showExcelIcon={true}
+                toggleExcelClick={handleExportExcel}
+                showGraphicIcon={true}
+                toggleGraphicClick={handleExportGraphic}
             />
             {isLoading && <Loader />}
             {!isLoading && (

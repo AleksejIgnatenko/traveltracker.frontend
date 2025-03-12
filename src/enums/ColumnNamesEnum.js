@@ -11,7 +11,7 @@ const ColumnNamesEnum = {
     // City
     country: "Страна",
     name: "Название",
-    linkBusinessTrips: "Командирвоки",
+    linkBusinessTrips: "Командировки",
 
     // Command
     dateIssued: "Дата выдачи",

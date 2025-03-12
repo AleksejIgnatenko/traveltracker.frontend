@@ -14,6 +14,12 @@ const Toolbar = ({
 
     showCalendarIcon = false,
     toggleCalendarClick,
+
+    showExcelIcon = false,
+    toggleExcelClick,
+
+    showGraphicIcon = false,
+    toggleGraphicClick,
 }) => {
 
     const handleSearchChange = (event) => {
@@ -46,6 +52,12 @@ const Toolbar = ({
                     )}
                     {showCalendarIcon && (
                         <IconBase name="bx-calendar" onClick={toggleCalendarClick}/>
+                    )}
+                    {showExcelIcon && (
+                        <IconBase name="bx-file" onClick={toggleExcelClick}/>
+                    )}
+                    {showGraphicIcon && (
+                        <IconBase name="bx-line-chart" onClick={toggleGraphicClick}/>
                     )}
                 </div>
             </div>

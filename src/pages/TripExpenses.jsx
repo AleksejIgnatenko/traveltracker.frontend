@@ -14,6 +14,7 @@ import GetTripExpenseByAdvanceReportIdFetchAsync from '../api/tripExpenseControl
 import GetTripExpenseByTripExpenseTypeIdFetchAsync from '../api/tripExpenseController/GetTripExpenseByTripExpenseTypeIdFetchAsync';
 import UpdateTripExpenseFetchAsync from '../api/tripExpenseController/UpdateTripExpenseFetchAsync';
 import DeleteTripExpenseFetchAsync from '../api/tripExpenseController/DeleteTripExpenseFetchAsync';
+import ExportTripExpensesToExcelFetchAsync from '../api/tripExpenseController/ExportTripExpensesToExcelFetchAsync';
 
 export default function TripExpenses() {
     const { type, id } = useParams();
@@ -166,6 +167,10 @@ export default function TripExpenses() {
         setActiveFilters(appliedFilters);
     };
 
+    const handleExportExcel = async () => {
+        await ExportTripExpensesToExcelFetchAsync();
+    };
+
     return (
         <>
             <Toolbar
@@ -175,6 +180,8 @@ export default function TripExpenses() {
                 toggleCreateModalClick={handleOpenAddModal}
                 showFilterIcon={true}
                 toggleFilterModalClick={handleFilterOpenCloseModal}
+                showExcelIcon={true}
+                toggleExcelClick={handleExportExcel}
             />
             {isLoading && <Loader />}
             {!isLoading && (

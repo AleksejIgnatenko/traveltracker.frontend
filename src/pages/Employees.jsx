@@ -11,6 +11,7 @@ import GetAllEmployeesFetchAsync from '../api/employeeController/GetAllEmployees
 import CreateEmployeeControllerFetchAsync from '../api/employeeController/CreateEmployeeControllerFetchAsync';
 import UpdateEmployeeFetchAsync from '../api/employeeController/UpdateEmployeeFetchAsync';
 import DeleteEmployeeFetchAsync from '../api/employeeController/DeleteEmployeeFetchAsync';
+import ExportEmployeesFetchToExcelAsync from '../api/employeeController/ExportEmployeesFetchToExcelAsync';
 
 export default function Employees() {
     const [isAddUpdateModalOpen, setIsAddUpdateModalOpen] = useState(false);
@@ -154,6 +155,10 @@ export default function Employees() {
         setActiveFilters(appliedFilters);
     };
 
+    const handleExportExcel = async () => {
+        await ExportEmployeesFetchToExcelAsync();
+    };
+
     return (
         <>
             <Toolbar
@@ -163,6 +168,8 @@ export default function Employees() {
                 toggleCreateModalClick={handleOpenAddModal}
                 showFilterIcon={true}
                 toggleFilterModalClick={handleFilterOpenCloseModal}
+                showExcelIcon={true}
+                toggleExcelClick={handleExportExcel}    
             />
             {isLoading && <Loader />}
             {!isLoading && (

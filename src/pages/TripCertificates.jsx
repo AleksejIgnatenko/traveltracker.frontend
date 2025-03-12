@@ -15,6 +15,8 @@ import GetTripCertificateByCityIdFetchAsync from '../api/tripCertificateControll
 import GetTripCertificateByCommandIdFetchAsync from '../api/tripCertificateController/GetTripCertificateByCommandIdFetchAsync';
 import UpdateTripCertificateFetchAsync from '../api/tripCertificateController/UpdateTripCertificateFetchAsync';
 import DeleteTripCertificateFetchAsync from '../api/tripCertificateController/DeleteTripCertificateFetchAsync';
+import ExportTripCertificatesToExcelFetchAsync from '../api/tripCertificateController/ExportTripCertificatesToExcelFetchAsync';
+
 export default function TripCertificates() {
     const { type, id } = useParams();
 
@@ -191,6 +193,10 @@ export default function TripCertificates() {
         setActiveFilters(appliedFilters);
     };
 
+    const handleExportExcel = async () => {
+        await ExportTripCertificatesToExcelFetchAsync();
+    };
+
     return (
         <>
             <Toolbar
@@ -200,6 +206,8 @@ export default function TripCertificates() {
                 toggleCreateModalClick={handleOpenAddModal}
                 showFilterIcon={true}
                 toggleFilterModalClick={handleFilterOpenCloseModal}
+                showExcelIcon={true}
+                toggleExcelClick={handleExportExcel}
             />
             {isLoading && <Loader />}
             {!isLoading && (
