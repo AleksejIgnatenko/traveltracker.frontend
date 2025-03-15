@@ -11,7 +11,13 @@ async function CreateCommandFetchAsync(command) {
         });
 
         if (!response.ok) {
-            console.error('Failed to create command');
+            const errorData = await response.json();
+            if (response.status === 400) {
+                const errorMessage = Object.values(errorData.error).join("\n");
+                alert(errorMessage);
+            } else {
+                alert(errorData);
+            }
         }
     } catch (error) {
         console.error('Error in creating command:', error);

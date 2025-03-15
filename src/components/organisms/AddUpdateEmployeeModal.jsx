@@ -3,6 +3,7 @@ import { InputWrapper } from '../molecules/InputWrapper';
 import { ButtonBase } from '../atoms/ButtonBase';
 import { CloseButton } from '../atoms/CloseButton';
 import '../../styles/organisms/AddUpdateEmployeeModal.css';
+import ColumnNamesEnum from '../../enums/ColumnNamesEnum';
 
 export default function AddUpdateEmployeeModal({ onClose, initialData, mode = 'add', onSubmit }) {
     const [formData, setFormData] = useState({
@@ -46,6 +47,7 @@ export default function AddUpdateEmployeeModal({ onClose, initialData, mode = 'a
             if (input && label) {
                 input.classList.add('error-input');
                 label.classList.add('error-label');
+                label.textContent = `${ColumnNamesEnum[field]} не может быть пустым.`; 
             }
             setErrors(prev => ({
                 ...prev,
@@ -85,7 +87,7 @@ export default function AddUpdateEmployeeModal({ onClose, initialData, mode = 'a
     const handleSubmit = (e) => {
         e.preventDefault();
         onSubmit(formData);
-        onClose();
+        // onClose();
     };
 
     const handleOverlayClick = (e) => {

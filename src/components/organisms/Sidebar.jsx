@@ -11,14 +11,6 @@ export default function Sidebar() {
     });
 
     useEffect(() => {
-        const fetchData = async () => {
-            
-        };
-
-        fetchData();
-    }, []);
-
-    useEffect(() => {
         const root = document.documentElement;
         root.setAttribute('data-theme', currentTheme);
         localStorage.setItem('theme', currentTheme);

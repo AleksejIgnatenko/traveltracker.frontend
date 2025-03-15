@@ -8,7 +8,7 @@ import FilterModal from '../components/organisms/FilterModal';
 import Loader from '../components/organisms/Loader';
 
 import GetAllEmployeesFetchAsync from '../api/employeeController/GetAllEmployeesFetchAsync';
-import CreateEmployeeControllerFetchAsync from '../api/employeeController/CreateEmployeeControllerFetchAsync';
+import CreateEmployeeFetchAsync from '../api/employeeController/CreateEmployeeFetchAsync';
 import UpdateEmployeeFetchAsync from '../api/employeeController/UpdateEmployeeFetchAsync';
 import DeleteEmployeeFetchAsync from '../api/employeeController/DeleteEmployeeFetchAsync';
 import ExportEmployeesFetchToExcelAsync from '../api/employeeController/ExportEmployeesFetchToExcelAsync';
@@ -33,25 +33,6 @@ export default function Employees() {
         const fetchData = async () => {
             try {
                 setIsLoading(true);
-                // const items = [
-                //     // Временные данные для примера
-                //     {
-                //         id: 1,
-                //         firstName: 'Иван',
-                //         lastName: 'Иванов',
-                //         middleName: 'Иванович',
-                //         position: 'Разработчик',
-                //         department: 'IT'
-                //     },
-                //     {
-                //         id: 2,
-                //         firstName: 'Петр',
-                //         lastName: 'Петров',
-                //         middleName: 'Петрович',
-                //         position: 'Менеджер',
-                //         department: 'Продажи'
-                //     }
-                // ]
 
                 await fetchEmployees();
                 setIsLoading(false);
@@ -122,7 +103,7 @@ export default function Employees() {
     };
 
     const handleAddEmployee = async (newEmployee) => {
-        await CreateEmployeeControllerFetchAsync(newEmployee);
+        await CreateEmployeeFetchAsync(newEmployee);
         await fetchEmployees();
     };
 

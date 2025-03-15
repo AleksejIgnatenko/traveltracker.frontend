@@ -141,7 +141,14 @@ export default function AdvanceReports() {
     };
 
     const handleApplyFilter = (filteredItems, appliedFilters) => {
-        setFilteredAdvanceReports(filteredItems);
+        const formattedItems = filteredItems.map(({ id, totalAmount, dateOfDelivery }) => ({
+            id,
+            totalAmount: totalAmount.toString(),
+            dateOfDelivery,
+            linkTripExpense: `/trip-expenses/advance-report/${id}`
+        }));
+
+        setFilteredAdvanceReports(formattedItems);
         setActiveFilters(appliedFilters);
     };
 

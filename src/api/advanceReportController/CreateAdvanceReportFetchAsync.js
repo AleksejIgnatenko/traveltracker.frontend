@@ -10,15 +10,14 @@ async function CreateAdvanceReportFetchAsync(advanceReport) {
             body: JSON.stringify(advanceReport)
         });
 
-        if(response.ok) {
-            return;
-        }
-        if (response.status === 400) {
+        if (!response.ok) {
             const errorData = await response.json();
-            console.error('Error details:', errorData);
-        } else {
-            const errorData = await response.json();
-            console.error('Error details:', errorData);
+            if (response.status === 400) {
+                const errorMessage = Object.values(errorData.error).join("\n");
+                alert(errorMessage);
+            } else {
+                alert(errorData);
+            }
         }
     } catch (error) {
         console.error('Error in creating advance report:', error);

@@ -10,16 +10,22 @@ async function GetAllCitiesFetchAsync() {
         });
 
         const data = await response.json();
-        
+
         if (response.ok) {
-           return data;
+            return data
         } else {
-            console.error('Error in getting all cities:', data);
-            return [];
+            if (response.status === 400) {
+                const errorMessage = Object.values(data.error).join("\n");
+                alert(errorMessage);
+                return [];
+            } else {
+                alert(data);
+                return [];
+            }
         }
     } catch (error) {
         console.error('Error in getting all cities:', error);
-        
+
         return [];
     }
 }

@@ -9,7 +9,7 @@ async function ExportAdvanceReportsToExcelAsync() {
             },
         });
 
-        const blob = await response.blob(); 
+    const blob = await response.blob(); 
     const url = window.URL.createObjectURL(blob); 
 
     const a = document.createElement("a");

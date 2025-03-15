@@ -16,6 +16,8 @@ import GetTripCertificateByCommandIdFetchAsync from '../api/tripCertificateContr
 import UpdateTripCertificateFetchAsync from '../api/tripCertificateController/UpdateTripCertificateFetchAsync';
 import DeleteTripCertificateFetchAsync from '../api/tripCertificateController/DeleteTripCertificateFetchAsync';
 import ExportTripCertificatesToExcelFetchAsync from '../api/tripCertificateController/ExportTripCertificatesToExcelFetchAsync';
+import { IconBase } from '../components/atoms/IconBase';
+import GenerateTripCertificateToWordFetchAsync from '../api/tripCertificateController/GenerateTripCertificateToWordFetchAsync';
 
 export default function TripCertificates() {
     const { type, id } = useParams();
@@ -65,11 +67,11 @@ export default function TripCertificates() {
                 //         startDate: '2024-01-06',
                 //         endDate: '2024-01-10',
                 //     }
-                
+
                 // ]
-                
+
                 if (id) {
-                     if (type === 'employee') {
+                    if (type === 'employee') {
                         await fetchTripCertificates('employeeId', id);
                     } else if (type === 'city') {
                         await fetchTripCertificates('cityId', id);
@@ -86,7 +88,7 @@ export default function TripCertificates() {
         };
 
         fetchData();
-    },  []);
+    }, []);
 
 
     useEffect(() => {
@@ -100,22 +102,22 @@ export default function TripCertificates() {
             )
             : tripCertificates;
 
-            const formattedItems = filteredTripCertificates.map(({ id, name, employeeFullName, commandTitle, cityName, startDate, endDate }) => ({
-                id,
-                name,
-                employeeFullName,
-                commandTitle, 
-                cityName,
-                startDate,
-                endDate,
-                linkAdvanceReport: `/advance-reports/trip-certificate/${id}`
-            }));
-    
+        const formattedItems = filteredTripCertificates.map(({ id, name, employeeFullName, commandTitle, cityName, startDate, endDate }) => ({
+            id,
+            name,
+            employeeFullName,
+            commandTitle,
+            cityName,
+            startDate,
+            endDate,
+            linkAdvanceReport: `/advance-reports/trip-certificate/${id}`
+        }));
+
         setFilteredTripCertificates(formattedItems);
     }, [tripCertificates, searchTerm]);
 
     const fetchTripCertificates = async (type, id) => {
-        let items;  
+        let items;
         if (type === 'employeeId') {
             items = await GetTripCertificateByEmployeeIdFetchAsync(id);
         } else if (type === 'cityId') {
@@ -125,18 +127,18 @@ export default function TripCertificates() {
         } else {
             items = await GetAllTripCertificatesFetchAsync();
         }
-    
+
         const formattedItems = items.map(({ id, name, employeeFullName, commandTitle, cityName, startDate, endDate }) => ({
             id,
             name,
             employeeFullName,
-            commandTitle, 
+            commandTitle,
             cityName,
             startDate,
             endDate,
             linkAdvanceReport: `/advance-reports/trip-certificate/${id}`
         }));
-    
+
         setTripCertificates(items);
         setFilteredTripCertificates(formattedItems);
     };
@@ -172,7 +174,7 @@ export default function TripCertificates() {
         await DeleteTripCertificateFetchAsync(tripCertificateId);
         await fetchTripCertificates();
     };
-    
+
     const handleFilterOpenCloseModal = () => {
         setIsFilterModalOpen(!isFilterModalOpen);
     };
@@ -197,6 +199,11 @@ export default function TripCertificates() {
         await ExportTripCertificatesToExcelFetchAsync();
     };
 
+    const handleGenerateTripCertificateToWordAsync = async (id) => {
+        await GenerateTripCertificateToWordFetchAsync(id);
+        console.log(id);
+    };
+
     return (
         <>
             <Toolbar
@@ -211,62 +218,66 @@ export default function TripCertificates() {
             />
             {isLoading && <Loader />}
             {!isLoading && (
-            <div className="cities-page">    
+                <div className="cities-page">
 
-            {tripCertificates.length === 0 ? (
-            <p className="no-items">Командировочные удостоверения не найдены.</p>
-            ) : (
-            <>
-                {filteredTripCertificates.length === 0 && (
-                    <p className="no-items">Ничего не найдено.</p>
-                )}
-                {filteredTripCertificates.length > 0 && (
-                    <div className="trip-certificates-table">
-                        <Table 
-                            items={filteredTripCertificates.map(item => ({
-                                ...item,
-                                actions: (
-                                    <div className="table-actions">
-                                        <ButtonBase 
-                                            onClick={() => handleOpenEditModal(item)}
-                                            variant="primary"
-                                        >
-                                            Редактировать
-                                        </ButtonBase>
-                                        <ButtonBase 
-                                            onClick={() => handleDeleteTripCertificate(item.id)}
-                                            variant="danger"
-                                        >
-                                            Удалить
-                                        </ButtonBase>
-                                    </div>
-                                )
-                            }))}
+                    {tripCertificates.length === 0 ? (
+                        <p className="no-items">Командировочные удостоверения не найдены.</p>
+                    ) : (
+                        <>
+                            {filteredTripCertificates.length === 0 && (
+                                <p className="no-items">Ничего не найдено.</p>
+                            )}
+                            {filteredTripCertificates.length > 0 && (
+                                <div className="trip-certificates-table">
+                                    <Table
+                                        items={filteredTripCertificates.map(item => ({
+                                            ...item,
+                                            actions: (
+                                                <div className="table-actions">
+                                                    <ButtonBase
+                                                        onClick={() => handleOpenEditModal(item)}
+                                                        variant="primary"
+                                                    >
+                                                        Редактировать
+                                                    </ButtonBase>
+                                                    <ButtonBase
+                                                        onClick={() => handleDeleteTripCertificate(item.id)}
+                                                        variant="danger"
+                                                    >
+                                                        Удалить
+                                                    </ButtonBase>
+                                                    <IconBase
+                                                        name="bx-file-blank"
+                                                        onClick={() => handleGenerateTripCertificateToWordAsync(item.id)}
+                                                    />
+                                                </div>
+                                            )
+                                        }))}
+                                    />
+                                </div>
+                            )}
+                        </>
+                    )}
+
+                    {isAddUpdateModalOpen && (
+                        <AddUpdateTripCertificateModal
+                            onClose={handleAddUpdateCloseModal}
+                            mode={modalMode}
+                            initialData={selectedTripCertificate}
+                            onSubmit={modalMode === 'add' ? handleAddTripCertificate : handleUpdateTripCertificate}
                         />
-                    </div>
-                )}
-            </>
-        )}
+                    )}
 
-                {isAddUpdateModalOpen && (
-                    <AddUpdateTripCertificateModal 
-                        onClose={handleAddUpdateCloseModal}
-                        mode={modalMode}
-                        initialData={selectedTripCertificate}
-                        onSubmit={modalMode === 'add' ? handleAddTripCertificate : handleUpdateTripCertificate}
-                    />
-                )}
-
-                {isFilterModalOpen && (
-                    <FilterModal
-                        onClose={() => setIsFilterModalOpen(false)}
-                        items={tripCertificates}
-                        filterFields={filterFields}
-                        onApplySort={handleApplyFilter}
-                        initialFilters={activeFilters}
-                    />
-                )}
-            </div>
+                    {isFilterModalOpen && (
+                        <FilterModal
+                            onClose={() => setIsFilterModalOpen(false)}
+                            items={tripCertificates}
+                            filterFields={filterFields}
+                            onApplySort={handleApplyFilter}
+                            initialFilters={activeFilters}
+                        />
+                    )}
+                </div>
             )}
         </>
     );

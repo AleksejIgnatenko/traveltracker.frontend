@@ -1,8 +1,8 @@
-import { CommandController } from "../controllers";
+import { TripCertificateController } from "../controllers";
 
-async function ExportDateQuantityChartToExcelFetchAsync() {
+async function GenerateTripCertificateToWordFetchAsync(id) {
     try {
-        const response = await fetch(`${CommandController}/export-date-quantity-chart-to-excel`, {
+        const response = await fetch(`${TripCertificateController}/generate-trip-certificate-to-word/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -14,14 +14,14 @@ async function ExportDateQuantityChartToExcelFetchAsync() {
 
     const a = document.createElement("a");
     a.href = url;
-    a.download = "date-quantity-chart.xlsx"; 
+    a.download = "generate-trip-certificate.docx"; 
     document.body.appendChild(a); 
     a.click(); 
     a.remove(); 
     window.URL.revokeObjectURL(url); 
     } catch (error) {
-        console.error('Error in getting date quantity chart:', error);
+        console.error('Error in getting trip certificate:', error);
     }
 }
 
-export default ExportDateQuantityChartToExcelFetchAsync;
+export default GenerateTripCertificateToWordFetchAsync;

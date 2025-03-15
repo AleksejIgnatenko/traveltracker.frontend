@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
-import AddUpdateEmployeeModal from '../components/organisms/AddUpdateEmployeeModal';
-import { ButtonBase } from '../components/atoms/ButtonBase';
+import React from 'react';
+import "./../styles/pages/Home.css";
 
 function Home() {
 
   return (
-    <div className="home-container">
-      
+    <div className='home-page'>
+      <h1>HOME PAGE</h1>
     </div>
   );
 }
